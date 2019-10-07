@@ -8,11 +8,14 @@ from email.mime.text import MIMEText
 import argparse
 import configparser
 
+import os
 
 def parse_args():
 
     config = configparser.ConfigParser()
-    config.read('config.ini')
+    dirname = os.path.dirname(__file__)
+
+    config.read(os.path.join(dirname, 'config.ini'))
     defaults = config['default']
     defaults = dict(defaults)
 
