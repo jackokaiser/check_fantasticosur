@@ -85,9 +85,9 @@ def check_availability(args):
 
     hotel = {
         'cuernos': [4, 8, 31, 32],
-        'chileno': [9, 29, 30]
+        'chileno': [9, 29, 30],
+        'frances': [14, 33, 34]
     }
-    # types =
     check_in = args['check_in'].strftime('%Y-%m-%d')
     check_out = args['check_out'].strftime('%Y-%m-%d')
     print('Query for hotel {} for dates: {} - {}'.format(args['hotel'], check_in, check_out))
