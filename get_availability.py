@@ -48,7 +48,7 @@ def parse_args():
 
 
 def make_msg(args, disponibility):
-    subject = "Fantasticosur: disponibility available"
+    subject = "{} Fantasticosur: disponibility available".format(args['hotel'].capitalize())
     n_nights = int((args['check_out'] - args['check_in']).total_seconds() / (24*60*60))
     body ='''
     Brace yourself,
@@ -65,7 +65,7 @@ def make_msg(args, disponibility):
     The magic script
     '''.format(check_in=args['check_in'].strftime('%d/%m/%Y'),
                check_out=args['check_out'].strftime('%d/%m/%Y'),
-               hotel=args['hotel'],
+               hotel=args['hotel'].capitalize(),
                nights=n_nights,
                dispo=disponibility)
     return subject, body
