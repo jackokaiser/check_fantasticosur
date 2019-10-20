@@ -31,7 +31,9 @@ def parse_args():
     parser.add_argument('--mailgun-url', type=str,
                         help='mailgun url')
     parser.add_argument('--mailgun-api', type=str,
-                        help='mailgun api')
+                        help='mailgun api'),
+    parser.add_argument('--hotel', type=str,
+                        help='what hotel should be searched')
     parser.add_argument('--check-in', type=valid_date,
                         help='Check-in date in format YYYY-MM-DD',
                         default=defaults['check_in'])
@@ -51,16 +53,19 @@ def make_msg(args, disponibility):
     body ='''
     Brace yourself,
 
-    The fantasticosur hotel has availability for the requested dates:
+    The fantasticosur hotel {hotel} has availability for the requested dates:
 
     check-in: {check_in}, check-out: {check_out} ({nights} nights)
 
     disponibility: {dispo}
 
+    Go book it: http://int.fantasticosur.com/es/online/
+
     Cheers,
     The magic script
     '''.format(check_in=args['check_in'].strftime('%d/%m/%Y'),
                check_out=args['check_out'].strftime('%d/%m/%Y'),
+               hotel=args['hotel'],
                nights=n_nights,
                dispo=disponibility)
     return subject, body
@@ -78,10 +83,14 @@ def send_mail(args, subject, body):
 def check_availability(args):
     query_url = 'http://int.fantasticosur.com/en/online/lugares/{type}/disponibilidad?fecha_in={date_in}&fecha_out={date_out}'
 
-    types = [9, 29, 30]
+    hotel = {
+        'cuernos': [4, 8, 31, 32],
+        'chileno': [9, 29, 30]
+    }
+    # types =
     check_in = args['check_in'].strftime('%Y-%m-%d')
     check_out = args['check_out'].strftime('%Y-%m-%d')
-    print('Query for dates: {} - {}'.format(check_in, check_out))
+    print('Query for hotel {} for dates: {} - {}'.format(args['hotel'], check_in, check_out))
 
     query_data = {
         'type': None,
@@ -91,7 +100,7 @@ def check_availability(args):
 
     disponibility = 0
 
-    for t in types:
+    for t in hotel[args['hotel']]:
         query_data['type'] = str(t)
         resp = requests.get(query_url.format(**query_data))
         disponibility += resp.json()['disponibilidad']
