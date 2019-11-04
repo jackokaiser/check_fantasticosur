@@ -103,7 +103,7 @@ def check_availability(args):
     for t in hotel[args['hotel']]:
         query_data['type'] = str(t)
         resp = requests.get(query_url.format(**query_data))
-        disponibility += resp.json()['disponibilidad']
+        disponibility += resp.json()['is_ok']
 
     if disponibility > 0:
         print('{} availabilities were found'.format(disponibility))
